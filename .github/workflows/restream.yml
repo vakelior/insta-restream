@@ -1,24 +1,24 @@
 name: Instagram Live Restream
 
 on:
-  workflow_dispatch:          # manual trigger (Actions tab → Run workflow)
-  schedule:                   # optional auto-run every hour (UTC)
+  workflow_dispatch:          # manual trigger
+  schedule:
     - cron: '0 * * * *'
 
 concurrency:
   group: restream-single
-  cancel-in-progress: true    # never run two streams at once
+  cancel-in-progress: true
 
 jobs:
   restream:
-    runs-on: ubuntu-latest    # 4 vCPU / 16 GB RAM — 2x stronger than a 2-core box
-    timeout-minutes: 350      # GitHub free tier caps a job at 6h; IG live caps ~4h
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install FFmpeg (with libx264)
+      - name: Install FFmpeg
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg
@@ -27,14 +27,13 @@ jobs:
         run: |
           ffmpeg -version | head -1
           echo "CPU cores: $(nproc)"
-          echo "RAM: $(free -m | awk '/Mem:/ {print $2" MB"}')"
 
-      - name: Run restream (1080p30 full-screen vertical, high quality)
+      - name: Run restream (720x1280 vertical, high quality)
         env:
           INSTA_RTMPS: ${{ secrets.INSTA_RTMPS }}
           INPUT_URL: ${{ secrets.INPUT_URL }}
-          OUT_W: "1080"
-          OUT_H: "1920"
+          OUT_W: "720"
+          OUT_H: "1280"
           OUT_FPS: "30"
-          VIDEO_BITRATE: "6000k"     # IG caps at 6000k
+          VIDEO_BITRATE: "4500k"
         run: bash restream.sh
