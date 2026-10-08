@@ -1,0 +1,40 @@
+name: Instagram Live Restream
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'
+
+concurrency:
+  group: restream-single
+  cancel-in-progress: true
+
+jobs:
+  restream:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install FFmpeg (with libx264)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+
+      - name: Verify FFmpeg + hardware
+        run: |
+          ffmpeg -version | head -1
+          echo "CPU cores: $(nproc)"
+          echo "RAM: $(free -m | awk '/Mem:/ {print $2" MB"}')"
+
+      - name: Run restream (1080p50 full-screen vertical)
+        env:
+          INSTA_RTMPS: ${{ secrets.INSTA_RTMPS }}
+          INPUT_URL: ${{ secrets.INPUT_URL }}
+          OUT_W: "1080"
+          OUT_H: "1920"
+          OUT_FPS: "50"
+          VIDEO_BITRATE: "6000k"
+        run: bash restream.sh
