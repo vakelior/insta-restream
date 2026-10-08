@@ -1,18 +1,18 @@
 name: Instagram Live Restream
 
 on:
-  workflow_dispatch:
-  schedule:
+  workflow_dispatch:          # manual trigger (Actions tab → Run workflow)
+  schedule:                   # optional auto-run every hour (UTC)
     - cron: '0 * * * *'
 
 concurrency:
   group: restream-single
-  cancel-in-progress: true
+  cancel-in-progress: true    # never run two streams at once
 
 jobs:
   restream:
-    runs-on: ubuntu-latest
-    timeout-minutes: 350
+    runs-on: ubuntu-latest    # 4 vCPU / 16 GB RAM — 2x stronger than a 2-core box
+    timeout-minutes: 350      # GitHub free tier caps a job at 6h; IG live caps ~4h
 
     steps:
       - name: Checkout
@@ -36,5 +36,5 @@ jobs:
           OUT_W: "1080"
           OUT_H: "1920"
           OUT_FPS: "50"
-          VIDEO_BITRATE: "6000k"
+          VIDEO_BITRATE: "6000k"     # IG caps at 6000k
         run: bash restream.sh

@@ -22,6 +22,7 @@ CORES="$(nproc)"
 echo ">>> Instagram Live restream (${OUT_W}x${OUT_H}@${OUT_FPS}fps, ${VB}, ${CORES} cores)"
 echo ">>> Source: $INPUT_URL"
 
+# rotate 90° + scale-to-cover + crop => full vertical screen, no bars
 FILTER="transpose=1,scale=${OUT_W}:${OUT_H}:force_original_aspect_ratio=increase,crop=${OUT_W}:${OUT_H},fps=${OUT_FPS},setsar=1,format=yuv420p"
 
 exec ffmpeg -hide_banner -loglevel warning \

@@ -6,6 +6,7 @@ set -uo pipefail
 LOG=live.log
 : > "$LOG"
 
+# Load .env safely
 if [[ -f .env ]]; then
   set -a
   while IFS= read -r line; do

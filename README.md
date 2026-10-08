@@ -13,7 +13,18 @@ Instagram Live (RTMPS)
 
 ## One-time setup (do this ONCE)
 
-### 1. Add secrets (Settings → Secrets and variables → Actions)
+### 1. Push this repo to GitHub
+```bash
+cd insta-restream
+git init
+git add .
+git commit -m "insta restream"
+git branch -M main
+git remote add origin https://github.com/<YOUR_USER>/insta-restream.git
+git push -u origin main
+```
+
+### 2. Add secrets (Settings → Secrets and variables → Actions)
 | Secret | Value |
 |--------|-------|
 | `INSTA_RTMPS` | your Instagram RTMPS URL (from .env, the `rtmps://...` line) |
@@ -22,7 +33,7 @@ Instagram Live (RTMPS)
 > ⚠️ The RTMPS key/token **expires every session**. Fetch a fresh one from
 > Instagram (mobile → Live → share link) before each run.
 
-### 2. Run it
+### 3. Run it
 - Go to **Actions → "Instagram Live Restream" → Run workflow**.
 - (Optional) the cron already auto-runs every hour.
 
