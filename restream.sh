@@ -14,7 +14,7 @@ INSTA_RTMPS="${INSTA_RTMPS:-}"
 
 OUT_W="${OUT_W:-1080}"
 OUT_H="${OUT_H:-1920}"
-OUT_FPS="${OUT_FPS:-50}"
+OUT_FPS="${OUT_FPS:-30}"
 VB="${VIDEO_BITRATE:-6000k}"
 MAXR="${MAXRATE:-6500k}"
 CORES="$(nproc)"
@@ -29,7 +29,7 @@ exec ffmpeg -hide_banner -loglevel warning \
   -re -i "$INPUT_URL" \
   -map 0:v:0 -map 0:a:0 \
   -vf "$FILTER" \
-  -c:v libx264 -preset fast -tune zerolatency -threads "$CORES" \
+  -c:v libx264 -preset medium -tune zerolatency -threads "$CORES" \
   -b:v "$VB" -maxrate "$MAXR" -bufsize 13000k \
   -g $((OUT_FPS*2)) -r "$OUT_FPS" \
   -c:a aac -b:a 160k -ar 48000 \
